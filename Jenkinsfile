@@ -15,11 +15,14 @@ pipeline {
 
      
 
+      stages {
         stage('Build TypeScript') {
             steps {
+                sh 'npm install'
                 sh 'npm run build'
             }
         }
+    }
 
         stage('Docker Build (local only)') {
             steps {
