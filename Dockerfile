@@ -1,29 +1,15 @@
-# FROM node:alpine
+FROM node:18                
 
-# WORKDIR /app
-# COPY package.json .
-# RUN npm install --omit=dev
-# COPY . .
+WORKDIR /app                 
 
-# CMD ["npm", "start"]
-# Use Node.js base image
-FROM node:18
+COPY package*.json ./       
 
-# Set working directory
-WORKDIR /app
+RUN npm install            
 
-# Copy files
-COPY package*.json ./
-RUN npm install
+COPY . .                 
 
-COPY . .
+RUN npm run build            
 
-# Build the app
-RUN npm run build
+EXPOSE 3000                
 
-# Expose app port
-EXPOSE 3000
-
-# Start the app
-CMD ["npm", "start"]
-
+CMD ["npm", "start"]       
