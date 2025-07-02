@@ -15,7 +15,7 @@ pipeline {
 
      
 
-      stages {
+      stage {
         stage('Build TypeScript') {
             steps {
                 sh 'npm install'
