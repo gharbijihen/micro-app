@@ -1,12 +1,13 @@
 FROM node:18                
 
-WORKDIR /app                 
+WORKDIR /app  
 
+COPY tickets/tsconfig.json ./
 COPY tickets/package.json ./       
 
 RUN npm install            
 
-COPY . .                 
+COPY tickets/ ./
 
 RUN npm run build            
 
