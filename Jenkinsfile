@@ -4,7 +4,7 @@ pipeline {
     environment {
         APP_NAME = "micro-app"
         IMAGE_NAME = "micro-app-local"
-        NEXUS_URL = "localhost:8082"
+        NEXUS_URL = "localhost:8081"
         NEXUS_REPO = "docker-hosted"
     }
 
