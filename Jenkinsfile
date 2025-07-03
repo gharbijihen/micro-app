@@ -4,7 +4,7 @@ pipeline {
     environment {
         APP_NAME = "micro-app"
         IMAGE_NAME = "micro-app-local"
-        NEXUS_URL = "192.168.1.122:8082"
+        NEXUS_URL = "192.168.1.122:5000"
         NEXUS_REPO = "docker-images"
     }
 
