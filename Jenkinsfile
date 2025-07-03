@@ -5,11 +5,9 @@ pipeline {
         APP_NAME = "micro-app"
         IMAGE_NAME = "micro-app-local"
         NEXUS_URL = "localhost:8082"
-        NEXUS_REPO = "docker-hosted"               // Replace with your repo name
+        NEXUS_REPO = "docker-hosted"
         NEXUS_USERNAME = credentials('admin')  // Jenkins credential ID for Nexus username
         NEXUS_PASSWORD = credentials('root')  // Jenkins credential ID for Nexus password
-    }
-
     }
 
     stages {
@@ -24,6 +22,7 @@ pipeline {
                 sh "docker build -t $IMAGE_NAME ."
             }
         }
+
         stage('Tag and Push to Nexus') {
             steps {
                 script {
@@ -36,6 +35,7 @@ pipeline {
                         docker logout $NEXUS_URL
                     """
                 }
-       
-    }}
+            }
+        }
+    }
 }
