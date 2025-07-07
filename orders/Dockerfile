@@ -1,8 +1,16 @@
-FROM node:alpine
+FROM node:18                
 
-WORKDIR /app
-COPY package.json .
-RUN npm install --omit=dev
-COPY . .
+WORKDIR /app  
 
-CMD ["npm", "start"]
+COPY orders/tsconfig.json ./
+COPY orders/package.json ./       
+
+RUN npm install            
+
+COPY orders/ ./
+
+RUN npm run build            
+
+EXPOSE 3020                
+
+CMD ["npm", "start"]       
