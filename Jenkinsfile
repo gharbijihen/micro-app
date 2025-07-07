@@ -2,8 +2,6 @@ pipeline {
     agent any
 
     environment {
-        APP_NAME = "micro-app"
-        IMAGE_NAME = "micro-app-local"
         NEXUS_URL = "192.168.1.122:5000"
         NEXUS_REPO = "docker-images"
     }
@@ -15,24 +13,29 @@ pipeline {
             }
         }
 
-        stage('Docker Build (local only)') {
+        stage('Build & Push Microservices') {
             steps {
-                sh "docker build -t $IMAGE_NAME ."
-            }
-        }
+                script {
+                    // List of your microservices
+                    def services = ["auth", "client", "expiration", "orders", "payments", "tickets"]
 
-        stage('Tag and Push to Nexus') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                    script {
-                        def imageTag = "${NEXUS_URL}/${NEXUS_REPO}/${APP_NAME}:latest"
+                    for (service in services) {
+                        def imageName = "${NEXUS_URL}/${NEXUS_REPO}/${service}:latest"
+                        def servicePath = "${service}"
+
+                        echo "Building and pushing image for ${service}..."
 
                         sh """
-                            docker tag $IMAGE_NAME $imageTag
-                            echo $NEXUS_PASSWORD | docker login $NEXUS_URL -u $NEXUS_USERNAME --password-stdin
-                            docker push $imageTag
-                            docker logout $NEXUS_URL
+                            docker build -t ${imageName} ${servicePath}
                         """
+
+                        withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                            sh """
+                                echo \$NEXUS_PASSWORD | docker login ${NEXUS_URL} -u \$NEXUS_USERNAME --password-stdin
+                                docker push ${imageName}
+                                docker logout ${NEXUS_URL}
+                            """
+                        }
                     }
                 }
             }
