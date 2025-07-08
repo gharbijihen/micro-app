@@ -6,8 +6,8 @@ COPYtsconfig.json ./
 COPYpackage.json ./       
 
 RUN npm install            
+COPY . ./
 
-COPY orders/ ./
 
 RUN npm run build            
 

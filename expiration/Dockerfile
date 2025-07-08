@@ -6,8 +6,7 @@ COPY tsconfig.json ./
 COPY package.json ./       
 
 RUN npm install            
-
-COPY expiration/ ./
+COPY . ./
 
 RUN npm run build            
 

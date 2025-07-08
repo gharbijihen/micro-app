@@ -7,7 +7,8 @@ COPY package.json ./
 
 RUN npm install            
 
-COPY tickets/ ./
+COPY . ./
+
 
 RUN npm run build            
 

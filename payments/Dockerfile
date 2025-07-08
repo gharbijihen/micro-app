@@ -7,7 +7,8 @@ COPY package.json ./
 
 RUN npm install            
 
-COPY payments/ ./
+COPY . ./
+
 
 RUN npm run build            
 

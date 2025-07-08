@@ -7,7 +7,8 @@ COPY package.json ./
 
 RUN npm install            
 
-COPY auth/ ./
+COPY . ./
+
 
 RUN npm run build            
 
