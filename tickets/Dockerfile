@@ -2,8 +2,8 @@ FROM node:18
 
 WORKDIR /app  
 
-COPY tickets/tsconfig.json ./
-COPY tickets/package.json ./       
+COPY tsconfig.json ./
+COPY package.json ./       
 
 RUN npm install            
 

@@ -1,9 +1,9 @@
 FROM node:18                
 
 WORKDIR /app  
+COPY tsconfig.json ./
 
-COPY auth/tsconfig.json ./
-COPY auth/package.json ./       
+COPY package.json ./       
 
 RUN npm install            
 

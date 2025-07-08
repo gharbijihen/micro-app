@@ -2,8 +2,8 @@ FROM node:18
 
 WORKDIR /app  
 
-COPY orders/tsconfig.json ./
-COPY orders/package.json ./       
+COPYtsconfig.json ./
+COPYpackage.json ./       
 
 RUN npm install            
 
