@@ -45,7 +45,7 @@ pipeline {
             steps {
                 script {
                     withSonarQubeEnv("${SONARQUBE_ENV}") {
-                        withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                        withCredentials([string(credentialsId: 'jenkins-sonarqube-token', variable: 'SONAR_TOKEN')]) {
                             sh """
                                 sonar-scanner \
                                   -Dsonar.login=$SONAR_TOKEN
@@ -55,5 +55,5 @@ pipeline {
                 }
             }
         }
-    } // 👈 cette accolade FERMANTE manquait
+    } 
 }
