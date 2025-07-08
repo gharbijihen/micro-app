@@ -4,7 +4,7 @@ pipeline {
     environment {
         NEXUS_URL = "192.168.1.122:5000"
         NEXUS_REPO = "docker-images"
-         SONARQUBE_ENV = 'sonarqube-server'
+        SONARQUBE_ENV = 'sonarqube-server' // Nom du serveur Sonar dans Jenkins
     }
 
     stages {
@@ -17,7 +17,6 @@ pipeline {
         stage('Build & Push Microservices') {
             steps {
                 script {
-                    // List of your microservices
                     def services = ["auth", "client", "expiration", "orders", "payments", "tickets"]
 
                     for (service in services) {
@@ -41,18 +40,20 @@ pipeline {
                 }
             }
         }
+
         stage('SonarQube Analysis') {
-    steps {
-        script {
-            withSonarQubeEnv("${SONARQUBE_ENV}") {
-                withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
-                    sh """
-                        sonar-scanner \
-                          -Dsonar.login=$SONAR_TOKEN
-                    """
+            steps {
+                script {
+                    withSonarQubeEnv("${SONARQUBE_ENV}") {
+                        withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                            sh """
+                                sonar-scanner \
+                                  -Dsonar.login=$SONAR_TOKEN
+                            """
+                        }
+                    }
                 }
             }
         }
-    }
-}
+    } // 👈 cette accolade FERMANTE manquait
 }
