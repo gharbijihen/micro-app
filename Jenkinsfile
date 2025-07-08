@@ -4,6 +4,7 @@ pipeline {
     environment {
         NEXUS_URL = "192.168.1.122:5000"
         NEXUS_REPO = "docker-images"
+         SONARQUBE_ENV = 'sonarqube-server'
     }
 
     stages {
@@ -40,5 +41,18 @@ pipeline {
                 }
             }
         }
+        stage('SonarQube Analysis') {
+    steps {
+        script {
+            withSonarQubeEnv("${SONARQUBE_ENV}") {
+                withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                    sh """
+                        sonar-scanner \
+                          -Dsonar.login=$SONAR_TOKEN
+                    """
+                }
+            }
+        }
     }
+}
 }
