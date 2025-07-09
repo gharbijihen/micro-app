@@ -41,13 +41,14 @@ stage('SonarQube Analysis') {
     steps {
         withCredentials([string(credentialsId: 'jenkins-sonarqube-token', variable: 'SONAR_TOKEN')]) {
             sh '''
-                echo "Running sonar scanner..."
-                npx sonar-scanner \
-                    -Dsonar.projectKey=payments \
-                    -Dsonar.sources=. \
-                    -Dsonar.host.url=http://localhost:9000 \
-                    -Dsonar.login=$SONAR_TOKEN
-            '''
+             echo "Running sonar scanner..."
+             npx sonar-scanner -X \
+            -Dsonar.projectKey=payments \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=http://localhost:9000 \
+            -Dsonar.login=$SONAR_TOKEN
+
+                    '''
         }
     }
 }
