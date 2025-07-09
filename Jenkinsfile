@@ -4,7 +4,7 @@ pipeline {
     environment {
         NEXUS_URL = "192.168.1.122:5000"
         NEXUS_REPO = "docker-images"
-        SONARQUBE_ENV = 'sonarqube-server' // Nom du serveur Sonar dans Jenkins
+        SONARQUBE_ENV = 'sonarqube-server'
     }
 
     stages {
@@ -30,37 +30,44 @@ pipeline {
                         """
 
                         withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                            sh """
-                                echo \$NEXUS_PASSWORD | docker login ${NEXUS_URL} -u \$NEXUS_USERNAME --password-stdin
+                            sh '''
+                                echo $NEXUS_PASSWORD | docker login ${NEXUS_URL} -u $NEXUS_USERNAME --password-stdin
                                 docker push ${imageName}
                                 docker logout ${NEXUS_URL}
-                            """
+                            '''
                         }
                     }
                 }
             }
         }
 
-       stage('SonarQube Analysis') {
-        steps {
-        script {
-         withSonarQubeEnv("${SONARQUBE_ENV}") {
-                withCredentials([string(credentialsId: 'jenkins-sonarqube-token', variable: 'SONAR_TOKEN')]) {
-                    // Utilise l'outil sonar-scanner installé par Jenkins
-                    def scannerHome = tool 'sonar-scanner'
-                    sh """
-                        ${scannerHome}/bin/sonar-scanner \
-                          -Dsonar.projectKey=micro-app \
-                          -Dsonar.sources=. \
-                          -Dsonar.host.url=http://localhost:9000 \
-                          -Dsonar.login=$SONAR_TOKEN
-                    """
+        // stage('SonarQube Analysis') {
+        //     steps {
+        //         script {
+        //             withSonarQubeEnv("${SONARQUBE_ENV}") {
+        //                 withCredentials([string(credentialsId: 'jenkins-sonarqube-token', variable: 'SONAR_TOKEN')]) {
+        //                     def scannerHome = tool 'sonar-scanner'  // doit exister dans Jenkins    
+        //                     sh """
+        //                         ${scannerHome}/bin/sonar-scanner \
+        //                           -Dsonar.projectKey=micro-app \
+        //                           -Dsonar.sources=. \
+        //                           -Dsonar.host.url=http://localhost:9000 \
+        //                           -Dsonar.login=${SONAR_TOKEN}
+        //                     """
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        stage("SonarQube Analysis"){
+            steps {
+                script {
+                withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token' ) {
+                sh "npm sonar : sonar"
                 }
-            }
+        }
+        }
         }
     }
-}
-
-
-    } 
 }
