@@ -37,23 +37,24 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    withSonarQubeEnv("${SONARQUBE_ENV}") {
-                        withCredentials([string(credentialsId: 'jenkins-sonarqube-token', variable: 'SONAR_TOKEN')]) {
-                            def scannerHome = tool 'sonar-scanner'
-                            sh """
-                                ${scannerHome}/bin/sonar-scanner \
-                                  -Dsonar.projectKey=micro-app \
-                                  -Dsonar.sources=. \
-                                  -Dsonar.host.url=http://localhost:9000 \
-                                  -Dsonar.login=${SONAR_TOKEN}
-                            """
-                        }
+       stage('SonarQube Analysis') {
+    steps {
+        script {
+            withSonarQubeEnv("${SONARQUBE_ENV}") {
+                withCredentials([string(credentialsId: 'jenkins-sonarqube-token', variable: 'SONAR_TOKEN')]) {
+                    def scannerHome = tool name: 'sonar-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                    withEnv(["SONAR_TOKEN=${SONAR_TOKEN}"]) {
+                        sh """${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=micro-app \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=http://localhost:9000 \
+                            -Dsonar.login=$SONAR_TOKEN"""
                     }
                 }
             }
         }
+    }
+}
+
     }
 }
