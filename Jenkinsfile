@@ -43,8 +43,9 @@ stage('SonarQube Analysis') {
             sh '''
                 echo "Running sonar scanner..."
                 echo "SONAR_TOKEN=$SONAR_TOKEN"
-                npm sonar-scanner -Dsonar.projectKey=payments -Dsonar.sources=. -Dsonar.host.url=http://localhost:9000 -Dsonar.login=$SONAR_TOKEN
-            '''
+                -Dsonar.sources=. \
+                -Dsonar.host.url=http://localhost:9000 \
+                -Dsonar.login=$SONAR_TOKEN            '''
         }
     }
 }
