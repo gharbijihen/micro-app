@@ -18,23 +18,19 @@ pipeline {
             steps {
                 script {
                     def services = ["auth", "client", "expiration", "orders", "payments", "tickets"]
-
                     for (service in services) {
                         def imageName = "${NEXUS_URL}/${NEXUS_REPO}/${service}:latest"
                         def servicePath = "${service}"
-
                         echo "Building and pushing image for ${service}..."
 
-                        sh """
-                            docker build -t ${imageName} ${servicePath}
-                        """
+                        sh "docker build -t ${imageName} ${servicePath}"
 
                         withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-                            sh '''
-                                echo $NEXUS_PASSWORD | docker login ${NEXUS_URL} -u $NEXUS_USERNAME --password-stdin
+                            sh """
+                                echo \$NEXUS_PASSWORD | docker login ${NEXUS_URL} -u \$NEXUS_USERNAME --password-stdin
                                 docker push ${imageName}
                                 docker logout ${NEXUS_URL}
-                            '''
+                            """
                         }
                     }
                 }
@@ -46,7 +42,7 @@ pipeline {
         //         script {
         //             withSonarQubeEnv("${SONARQUBE_ENV}") {
         //                 withCredentials([string(credentialsId: 'jenkins-sonarqube-token', variable: 'SONAR_TOKEN')]) {
-        //                     def scannerHome = tool 'sonar-scanner'  // doit exister dans Jenkins    
+        //                     def scannerHome = tool 'sonar-scanner'
         //                     sh """
         //                         ${scannerHome}/bin/sonar-scanner \
         //                           -Dsonar.projectKey=micro-app \
@@ -59,15 +55,5 @@ pipeline {
         //         }
         //     }
         // }
-
-        stage("SonarQube Analysis"){
-            steps {
-                script {
-                withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token' ) {
-                sh "npm sonar : sonar"
-                }
-        }
-        }
-        }
     }
 }
