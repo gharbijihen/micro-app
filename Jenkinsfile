@@ -45,7 +45,7 @@ pipeline {
         steps {
         script {
          withSonarQubeEnv("${SONARQUBE_ENV}") {
-                withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                withCredentials([string(credentialsId: 'jenkins-sonarqube-token', variable: 'SONAR_TOKEN')]) {
                     // Utilise l'outil sonar-scanner installé par Jenkins
                     def scannerHome = tool 'sonar-scanner'
                     sh """
