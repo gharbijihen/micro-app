@@ -40,7 +40,6 @@ pipeline {
 stage('SonarQube Analysis') {
     steps {
         withCredentials([string(credentialsId: 'jenkins-sonarqube-token', variable: 'SONAR_TOKEN')]) {
-            sh 'npm install'
             sh '''
                 echo "Running sonar scanner..."
                 echo "SONAR_TOKEN=$SONAR_TOKEN"
@@ -49,8 +48,5 @@ stage('SonarQube Analysis') {
         }
     }
 }
-
-
-
     }
 }
