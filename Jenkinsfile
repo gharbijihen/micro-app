@@ -40,11 +40,16 @@ pipeline {
 stage('SonarQube Analysis') {
     steps {
         withCredentials([string(credentialsId: 'jenkins-sonarqube-token', variable: 'SONAR_TOKEN')]) {
-            sh 'npm install -g sonar-scanner'
-            sh 'SONAR_TOKEN=$SONAR_TOKEN npm run sonar'
+            sh 'npm install'
+            sh '''
+                echo "Running sonar scanner..."
+                echo "SONAR_TOKEN=$SONAR_TOKEN"
+                npx sonar-scanner -Dsonar.projectKey=payments -Dsonar.sources=. -Dsonar.host.url=http://localhost:9000 -Dsonar.login=$SONAR_TOKEN
+            '''
         }
     }
 }
+
 
 
     }
