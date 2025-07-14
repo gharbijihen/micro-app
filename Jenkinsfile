@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        NEXUS_URL = "192.168.1.122:5000"
+        NEXUS_URL = "192.168.1.140:5000"
         NEXUS_REPO = "docker-images"
         SONARQUBE_ENV = 'sonarqube-server'
     }
