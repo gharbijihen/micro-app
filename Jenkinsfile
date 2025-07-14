@@ -39,19 +39,17 @@ pipeline {
 
 stage('SonarQube Analysis') {
     steps {
-        withCredentials([string(credentialsId: 'jenkins-sonarqube-token', variable: 'jenkins-sonarqube-token')]) {
-            sh '''
-             echo "Running sonar scanner..."
-             npx sonar-scanner -X \
-            -Dsonar.projectKey=payments \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=http://localhost:9000 \
-            -Dsonar.login=$jenkins-sonarqube-token
-
-                    '''
+        withCredentials([string(credentialsId: 'jenkins-sonarqube-token', variable: 'SONAR_TOKEN')]) {
+            sh """
+                echo "Running sonar scanner..."
+                npx sonar-scanner -X \
+                    -Dsonar.projectKey=payments \
+                    -Dsonar.sources=. \
+                    -Dsonar.host.url=http://localhost:9000 \
+                    -Dsonar.login=${SONAR_TOKEN}
+            """
         }
     }
 }
+    }}
 
-    }
-}
