@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        NEXUS_URL = "192.168.1.140:5000"
-        NEXUS_REPO = "docker-images"
+        DOCKERHUB_USERNAME = 'jihengharbi'
+        DOCKERHUB_REPO = 'jihen'
         SONARQUBE_ENV = 'sonarqube-server'
     }
 
@@ -36,7 +36,7 @@ pipeline {
                     sh "mkdir -p trivy-reports"
 
                     for (service in services) {
-                        def imageName = "${NEXUS_URL}/${NEXUS_REPO}/${service}:latest"
+                        def imageName = "${DOCKERHUB_USERNAME}/${DOCKERHUB_REPO}-${service}:latest"
                         def servicePath = "${service}"
                         echo "Building image for ${service}..."
 
@@ -53,12 +53,12 @@ pipeline {
                         """
                         sh "cat trivy-reports/${service}_report.txt"
 
-                        // Push to Nexus
-                        withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                        // Push to DockerHub
+                        withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                             sh """
-                                echo \$NEXUS_PASSWORD | docker login ${NEXUS_URL} -u \$NEXUS_USERNAME --password-stdin
+                                echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
                                 docker push ${imageName}
-                                docker logout ${NEXUS_URL}
+                                docker logout
                             """
                         }
                     }
