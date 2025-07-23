@@ -3,18 +3,19 @@ import { Password } from "../services/password";
 import { UserDoc } from "../types/IUser";
 import jwt from "jsonwebtoken";
 
-// An interface that describes the properties required to create a new User
+// An interface that describes the properties
+// that are requried to create a new User
 interface UserAttrs {
   email: string;
   password: string;
 }
 
-// An interface that describes the properties a User Model has
+// An interface that describes the properties
+// that a User Model has
 interface UserModel extends mongoose.Model<UserDoc> {
   build(attrs: UserAttrs): UserDoc;
 }
 
-// Define the schema
 const userSchema = new mongoose.Schema(
   {
     email: {
@@ -29,7 +30,7 @@ const userSchema = new mongoose.Schema(
   {
     toJSON: {
       transform(doc, ret) {
-        ret.id = ret._id.toString(); // ✅ convert to string
+        ret.id = ret._id;
         delete ret._id;
         delete ret.password;
         delete ret.__v;
@@ -38,7 +39,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Hash password before saving
 userSchema.pre("save", async function (done) {
   if (this.isModified("password")) {
     const hashed = await Password.toHash(this.get("password"));
@@ -47,18 +47,13 @@ userSchema.pre("save", async function (done) {
   done();
 });
 
-// JWT generator method
+//return JWT token
 userSchema.methods.getJwtToken = function () {
-  return jwt.sign(
-    { id: this._id.toString(), email: this.email },
-    process.env.JWT_KEY!,
-    {
-      expiresIn: 3600,
-    }
-  );
+  return jwt.sign({ id: this.id, email: this.email }, process.env.JWT_KEY!, {
+    expiresIn: 3600,
+  });
 };
 
-// Static builder method
 userSchema.statics.build = (attrs: UserAttrs) => {
   return new User(attrs);
 };
