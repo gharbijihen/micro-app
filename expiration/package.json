@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",         
-    "build": "echo 'Nothing to build'" ,
-    "test": "jest --watchAll --no-cache","sonar": "sonar-scanner -Dsonar.projectKey=payments -Dsonar.sources=. -Dsonar.host.url=http://localhost:9000 -Dsonar.login=$SONAR_TOKEN"
+    "start": "ts-node-dev --poll src/index.ts",
+    "test": "jest --watchAll --no-cache"
   },
   "jest": {
     "preset": "ts-jest",
