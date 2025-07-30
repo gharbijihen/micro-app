@@ -2,12 +2,11 @@
   "name": "tickets",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node index.js",         
-    "build": "echo 'Nothing to build'" ,
+    "start": "ts-node-dev --poll src/index.ts",
     "test": "jest --watchAll --no-cache",
-    "test:ci": "jest","sonar": "sonar-scanner -Dsonar.projectKey=payments -Dsonar.sources=. -Dsonar.host.url=http://localhost:9000 -Dsonar.login=$SONAR_TOKEN"
+    "test:ci": "jest"
   },
   "jest": {
     "preset": "ts-jest",
