@@ -36,11 +36,11 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
   },
-  {
+   {
     toJSON: {
-      transform(doc, ret) {
-        ret.id = ret._id;
-        delete ret._id;
+      transform(doc, ret: any) {
+      ret.id = ret._id;
+        delete ret?._id;
       },
     },
   }
