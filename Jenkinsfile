@@ -14,13 +14,17 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-                withCredentials([string(credentialsId: 'jenkins-sonarqube-token', variable: 'SONAR_TOKEN')]) {
+    
+  stage('SonarQube Analysis for all projects') {
+    steps {
+        withCredentials([string(credentialsId: 'jenkins-sonarqube-token', variable: 'SONAR_TOKEN')]) {
+            script {
+                def projects = ["auth", "client", "expiration", "orders", "payments", "tickets"]
+                for (proj in projects) {
                     sh """
-                        echo "Running sonar scanner..."
+                        echo "Running sonar scanner for project ${proj}..."
                         npx sonar-scanner -X \
-                            -Dsonar.projectKey=payments \
+                            -Dsonar.projectKey=${proj} \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=http://localhost:9000 \
                             -Dsonar.login=${SONAR_TOKEN}
@@ -28,7 +32,8 @@ pipeline {
                 }
             }
         }
-
+    }
+}
         stage('Build, Scan & Push Microservices') {
             steps {
                 script {
